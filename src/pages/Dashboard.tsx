@@ -1,15 +1,19 @@
 import { useNavigate } from 'react-router-dom';
-import { useOS } from '@/contexts/OSContext';
 import {
   PlusCircle,
   Search,
-  ClipboardList,
   Package,
   BarChart3,
   Wrench,
   LogOut,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { CardsResumo } from '@/components/CardsResumo';
+import { TabelaVendasServicos } from '@/components/TabelaVendasServicos';
+import { TabelaVendasProdutos } from '@/components/TabelaVendasProdutos';
+import { ListaOrdens } from '@/components/ListaOrdens';
+import { useOficina } from '@/contexts/OficinaContext';
 
 interface DashboardCardProps {
   icon: React.ReactNode;
@@ -59,9 +63,7 @@ function DashboardCard({
 
 export default function Dashboard() {
   const navigate = useNavigate();
-  const { ordens } = useOS();
-
-  const ordensAbertas = ordens.filter((o) => o.status !== 'finalizada').length;
+  const { ordensAbertas } = useOficina();
 
   return (
     <div className="min-h-screen bg-background">
@@ -73,7 +75,7 @@ export default function Dashboard() {
             </div>
             <div>
               <h1 className="text-xl font-bold text-foreground">MotoService</h1>
-              <p className="text-xs text-muted-foreground">Ordem de Serviço</p>
+              <p className="text-xs text-muted-foreground">Sistema de Gestão</p>
             </div>
           </div>
           <Button
@@ -88,45 +90,43 @@ export default function Dashboard() {
       </header>
 
       <main className="max-w-6xl mx-auto p-4 space-y-6">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        {/* Cards de Resumo */}
+        <CardsResumo />
+
+        {/* Cards de Navegação */}
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           <DashboardCard
             icon={<PlusCircle className="h-6 w-6 text-primary" />}
-            title="Nova Ordem de Serviço"
-            description="Criar uma nova OS para atendimento"
-            onClick={() => navigate('/os/nova')}
+            title="Nova OS"
+            description="Criar ordem de serviço"
+            onClick={() => navigate('/pdv/nova')}
             variant="primary"
           />
 
           <DashboardCard
             icon={<Search className="h-6 w-6 text-info" />}
-            title="Buscar por Placa"
-            description="Localizar ordens de serviço"
+            title="Buscar"
+            description="Localizar OS por placa"
             onClick={() => navigate('/busca')}
-          />
-
-          <DashboardCard
-            icon={<ClipboardList className="h-6 w-6 text-warning" />}
-            title="Ordens em Aberto"
-            description="Visualizar OS pendentes"
-            onClick={() => navigate('/busca')}
-            badge={ordensAbertas}
           />
 
           <DashboardCard
             icon={<Package className="h-6 w-6 text-success" />}
             title="Estoque"
-            description="Gerenciar produtos e peças"
-            onClick={() => {}}
+            description="Gerenciar produtos"
+            onClick={() => navigate('/estoque')}
+            badge={ordensAbertas > 0 ? ordensAbertas : undefined}
           />
 
           <DashboardCard
             icon={<BarChart3 className="h-6 w-6 text-muted-foreground" />}
             title="Relatórios"
-            description="Visualizar métricas e dados"
+            description="Visualizar vendas"
             onClick={() => {}}
           />
         </div>
 
+        {/* Alerta de Ordens Abertas */}
         {ordensAbertas > 0 && (
           <div className="bg-warning/10 border border-warning/30 rounded-lg p-4">
             <p className="text-warning font-medium">
@@ -134,6 +134,24 @@ export default function Dashboard() {
             </p>
           </div>
         )}
+
+        {/* Tabs de Conteúdo */}
+        <Tabs defaultValue="ordens" className="w-full">
+          <TabsList className="grid w-full grid-cols-3 bg-card border border-border">
+            <TabsTrigger value="ordens">Ordens de Serviço</TabsTrigger>
+            <TabsTrigger value="servicos">Vendas Serviços</TabsTrigger>
+            <TabsTrigger value="produtos">Vendas Produtos</TabsTrigger>
+          </TabsList>
+          <TabsContent value="ordens" className="mt-4">
+            <ListaOrdens />
+          </TabsContent>
+          <TabsContent value="servicos" className="mt-4">
+            <TabelaVendasServicos />
+          </TabsContent>
+          <TabsContent value="produtos" className="mt-4">
+            <TabelaVendasProdutos />
+          </TabsContent>
+        </Tabs>
       </main>
     </div>
   );
