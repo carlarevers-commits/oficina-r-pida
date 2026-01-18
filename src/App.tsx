@@ -3,11 +3,12 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { OSProvider } from "@/contexts/OSContext";
+import { OficinaProvider } from "@/contexts/OficinaContext";
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import BuscaPlaca from "./pages/BuscaPlaca";
-import OrdemServico from "./pages/OrdemServico";
+import PDV from "./pages/PDV";
+import Estoque from "./pages/Estoque";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -15,7 +16,7 @@ const queryClient = new QueryClient();
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
-      <OSProvider>
+      <OficinaProvider>
         <Toaster />
         <Sonner />
         <BrowserRouter>
@@ -23,11 +24,12 @@ const App = () => (
             <Route path="/" element={<Login />} />
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/busca" element={<BuscaPlaca />} />
-            <Route path="/os/:id" element={<OrdemServico />} />
+            <Route path="/pdv/:id" element={<PDV />} />
+            <Route path="/estoque" element={<Estoque />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </BrowserRouter>
-      </OSProvider>
+      </OficinaProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
