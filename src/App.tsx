@@ -12,6 +12,7 @@ import BuscaPlaca from "./pages/BuscaPlaca";
 import PDV from "./pages/PDV";
 import Estoque from "./pages/Estoque";
 import Clientes from "./pages/Clientes";
+import Veiculos from "./pages/Veiculos";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -32,6 +33,7 @@ const App = () => (
               <Route path="/pdv/:id" element={<PDV />} />
               <Route path="/estoque" element={<Estoque />} />
               <Route path="/clientes" element={<Clientes />} />
+              <Route path="/veiculos" element={<Veiculos />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </BrowserRouter>
