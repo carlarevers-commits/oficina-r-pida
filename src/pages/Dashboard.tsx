@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import {
   PlusCircle,
@@ -6,6 +7,7 @@ import {
   BarChart3,
   Wrench,
   LogOut,
+  Users,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -14,6 +16,7 @@ import { TabelaVendasServicos } from '@/components/TabelaVendasServicos';
 import { TabelaVendasProdutos } from '@/components/TabelaVendasProdutos';
 import { ListaOrdens } from '@/components/ListaOrdens';
 import { useOficina } from '@/contexts/OficinaContext';
+import { useAuth } from '@/hooks/useAuth';
 
 interface DashboardCardProps {
   icon: React.ReactNode;
@@ -64,6 +67,26 @@ function DashboardCard({
 export default function Dashboard() {
   const navigate = useNavigate();
   const { ordensAbertas } = useOficina();
+  const { user, loading, signOut } = useAuth();
+
+  useEffect(() => {
+    if (!loading && !user) {
+      navigate('/auth');
+    }
+  }, [user, loading, navigate]);
+
+  const handleLogout = async () => {
+    await signOut();
+    navigate('/');
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -81,7 +104,7 @@ export default function Dashboard() {
           <Button
             variant="ghost"
             size="icon"
-            onClick={() => navigate('/')}
+            onClick={handleLogout}
             className="text-muted-foreground hover:text-foreground"
           >
             <LogOut className="h-5 w-5" />
@@ -94,7 +117,7 @@ export default function Dashboard() {
         <CardsResumo />
 
         {/* Cards de Navegação */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
           <DashboardCard
             icon={<PlusCircle className="h-6 w-6 text-primary" />}
             title="Nova OS"
@@ -108,6 +131,13 @@ export default function Dashboard() {
             title="Buscar"
             description="Localizar OS por placa"
             onClick={() => navigate('/busca')}
+          />
+
+          <DashboardCard
+            icon={<Users className="h-6 w-6 text-warning" />}
+            title="Clientes"
+            description="Gerenciar clientes"
+            onClick={() => navigate('/clientes')}
           />
 
           <DashboardCard
