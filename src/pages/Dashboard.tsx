@@ -8,6 +8,7 @@ import {
   Wrench,
   LogOut,
   Users,
+  Car,
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
@@ -117,7 +118,7 @@ export default function Dashboard() {
         <CardsResumo />
 
         {/* Cards de Navegação */}
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-4">
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-4">
           <DashboardCard
             icon={<PlusCircle className="h-6 w-6 text-primary" />}
             title="Nova OS"
@@ -138,6 +139,13 @@ export default function Dashboard() {
             title="Clientes"
             description="Gerenciar clientes"
             onClick={() => navigate('/clientes')}
+          />
+
+          <DashboardCard
+            icon={<Car className="h-6 w-6 text-info" />}
+            title="Veículos"
+            description="Gerenciar veículos"
+            onClick={() => navigate('/veiculos')}
           />
 
           <DashboardCard

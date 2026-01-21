@@ -55,6 +55,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       // Create profile with company_id after signup
       if (data.user) {
         const companyId = crypto.randomUUID();
+        
+        // Create profile
         const { error: profileError } = await supabase.from('profiles').insert({
           user_id: data.user.id,
           company_id: companyId,
@@ -62,6 +64,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         });
 
         if (profileError) throw profileError;
+
+        // Create user role (default to 'owner' for new signups)
+        const { error: roleError } = await supabase.from('user_roles').insert({
+          user_id: data.user.id,
+          company_id: companyId,
+          role: 'owner',
+        });
+
+        if (roleError) throw roleError;
       }
 
       return { error: null };
